@@ -56,6 +56,7 @@ OS X El Capitan  10.11.6  验证
 系统|电源 5秒|强制关机
 .|Command + Option + Control + 电源| 退出所有应用程序
 .|Command + Option + esc|打开强制退出窗口
+.|Command + F5 |打开／关闭voice over 语音朗读
 
 #2.safari浏览器
 快捷键 | 功能
@@ -83,4 +84,7 @@ Command + 左|折叠目录
 Command + 上|跳到父目录
 Command + 下|跳到子目录
 
-
+# 4.iTerm2
+快捷键 | 功能
+------- | -------
+Command +1..9 |选择指定窗口

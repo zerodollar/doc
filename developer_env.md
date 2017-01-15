@@ -29,6 +29,7 @@ export PATH=.:$PATH:/usr/local/go/bin:$HOME/tool:$GOPATH/bin
 
 ## 2.配置vim和go
 主要用于golang开发，参考[vim-go](https://github.com/fatih/vim-go)安装，参考[vim-go教学](https://github.com/fatih/vim-go-tutorial)利用，使用vim-plug做包管理器
+* 安装vim/go
 ```
 brew link lua
 brew install vim --with-lua  #如果已安装brew unlink vim卸载
@@ -40,14 +41,14 @@ curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.c
 git clone https://github.com/fatih/vim-go.git ~/.vim/plugged/vim-go
 go get github.com/fatih/vim-go-tutorial
 cp $GOPATH/src/github.com/fatih/vim-go-tutorial/vimrc ~/.vimrc
-#安装插件
-vim -c PlugInstall  
+```
 
-#安装go组件
+* 安装go组件
+```
 :GoInstallBinaries   
 :GoUpdateBinaries
 ```
-安装[neocomplete](https://github.com/Shougo/neocomplete.vim),自动完成
+* 安装[neocomplete](https://github.com/Shougo/neocomplete.vim),自动完成, \<C-n> \<C-p>  上下选择补齐项，TAB确认
 ```
 git clone https://github.com/Shougo/neocomplete.vim.git ~/.vim/plugged/neocomplete
 
@@ -57,24 +58,31 @@ Plug 'Shougo/neocomplete'
 let g:neocomplete#enable_at_startup = 1
 ```
 
-修改go模版增加
+* 修改go模版增加
 ```
 ~/.vim/plugged/vim-go/templates／hello_world.go  
 func must(err error) {
        	if err != nil {
-       		pacnic(err)
+       		panic(err)
        	}
+}
+func StartTime(name string) func() {
+    t := time.Now()
+    log.Println("entering:", name, "started")
+    return func() {
+        d := time.Now().Sub(t)
+        log.Println("leaving:", name, "took", d)
+    }
 }
 ```
 
 
-安装[tagbar](https://github.com/majutsushi/tagbar.git)，显示函数窗口
+* 安装[tagbar](https://github.com/majutsushi/tagbar.git)，显示函数窗口
 默认的ctags，不是tagbar要求的Exuberant ctags 5.5，配置时要指定目录
 ```
 brew install ctags --HEAD
 
 git clone https://github.com/majutsushi/tagbar.git    ~/.vim/plugged/tagbar
-
 
 #添加配置到 ~/.vimrc
 Plug 'majutsushi/tagbar'
@@ -85,7 +93,7 @@ let g:tagbar_width=30
 map <F3> :Tagbar<CR>
 autocmd BufReadPost *.go,*.cpp,*.c,*.h,*.hpp,*.cc,*.cxx call tagbar#autoopen() 	"如果是c/go语言的程序的话，tagbar自动开启
 ```
-安装[NERDTree](https://github.com/scrooloose/nerdtree),浏览文件系统的树形资源管理
+* 安装[NERDTree](https://github.com/scrooloose/nerdtree),浏览文件系统的树形资源管理
 ```
 git clone https://github.com/scrooloose/nerdtree.git ~/.vim/plugged/nerdtree
 
@@ -96,7 +104,21 @@ let NERDTreeWinPos='left'
 let NERDTreeWinSize=30
 map <F2> :NERDTreeToggle<CR>
 ```
-安装beego等模块
+
+* 安装状态栏 ，使用了Airline提供更多状态栏支持
+```
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+```
+* 安装Markdown预览工具
+```
+npm -g install instant-markdown-d
+~/.vimrc 添加Plug 'suan/vim-instant-markdown'
+```
+* 安装插件
+`vim -c PlugInstall  `
+
+* 安装beego等模块
 ```
 go get github.com/astaxie/beego
 ```
@@ -130,14 +152,7 @@ go get github.com/astaxie/beego
 ||\<C-W-hjkl\>|窗口间切换
 :TagbarToggle|F3| 打开类窗口
 :NERDTreeToggle|F2|打开文件浏览窗口
-
-
-### 2.2 代码片段
-默认使用[Ultisnips](https://github.com/fatih/vim-go/blob/master/gosnippets/UltiSnips/go.snippets),还支持neosnippet
-errp+Tab:  判断有错误则panic
-###2.3自动补全
-<C-n>  本文中字符串补齐，不涉及语义
-neocomplete 已经支持输入时补齐，不需要再按键
+a-z/"0/"+|有名寄存器／拷贝寄存器／系统剪贴板
 
 ## 3.安装npm和nodejs
 ```
@@ -158,6 +173,7 @@ brew install nodejs   #v4.x.x更高版本
 ⇧⌥F  格式化
 ⌘⇧P  命令面板
 
+如果只要用go，liteIDE也不错
 
 ## 5.安装angular开发环境
 参考[搭建本地开发环境](https://angular.cn/docs/ts/latest/guide/setup.html)
@@ -172,6 +188,22 @@ npm start   #ts编译器和server都是watch模式
 
 用VS code打开目录quickstart开始开发
 
+## 6. Go 多版本管理
+* 下载go的pkg安装, 会在/usr/local/bin/目录
+这种方式删除有点困难,找到路径删除
+```
+pkgutil --pkgs | grep -i go    #找到包名com.googlecode.go
+pkgutil --files com.googlecode.go  #找到2个路径/usr/local/go &/etc/paths.d
+```
+或者使用工具[uninstallpkg](https://www.corecode.io/uninstallpkg/)
+* brew安装，会在/usr/local/Cellar/go/版本号
+* 如果有多版本的需要，可以考虑用gvm安装
+```
+zsh < <(curl -s -S -L https://raw.githubusercontent.com/moovweb/gvm/master/binscripts/gvm-installer)
+source ~/.gvm/scripts/gvm
+gvm listall  #访问https://go.googlesource.com/go/查看可用版本
+gvm install 
+```
 
 ## 附录：其它命令简单参考
 * curl
