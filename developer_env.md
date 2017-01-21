@@ -152,7 +152,8 @@ go get github.com/astaxie/beego
 ||\<C-W-hjkl\>|窗口间切换
 :TagbarToggle|F3| 打开类窗口
 :NERDTreeToggle|F2|打开文件浏览窗口
-a-z/"0/"+|有名寄存器／拷贝寄存器／系统剪贴板
+|a-z/"0/"+|有名寄存器／拷贝寄存器／系统剪贴板|
+|:bp/:bn|同一个窗口中多个文件切换|
 
 ## 3.安装npm和nodejs
 ```
@@ -187,6 +188,11 @@ npm start   #ts编译器和server都是watch模式
 如果没有异常，会自动打开浏览器访问3000端口
 
 用VS code打开目录quickstart开始开发
+* TypeScript
+```
+ npm install -g typescript
+```
+TypeScript 编译器，名称叫 tsc.编译后的是同名的js文件，默认是ES3
 
 ## 6. Go 多版本管理
 * 下载go的pkg安装, 会在/usr/local/bin/目录

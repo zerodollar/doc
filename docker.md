@@ -72,3 +72,37 @@ docker run z29759/zerodollar:1
     vim-go at  /
 ```
 如果报 `unauthorized: authentication required`, 将~/.docker/config.json中的url修改成"https://index.docker.io/v1/"
+
+#  5.启动mysql并访问
+还有一个优化版本mysql/mysql-server，开发方便还是用mysql了，参考[官方文档](https://hub.docker.com/_/mysql/)如何启动／连接
+```
+docker run --name malldb -p 3306:3306 -e MYSQL_ROOT_PASSWORD=rootpw -v $HOME/workspace/mall/malldb_volume:/var/lib/mysql -d mysql:8.0 
+docker exec -it malldb bash     #本容器交互式访问
+/# mysql -u root -prootpw               
+mysql> create database mall;
+```
+查看最后10行日志
+```
+docker logs --tail 10 malldb            
+```
+另外容器访问malldb ,首先查询mysql服务容器的ip地址，赋值给MYSQLIP。 同时-p将3306映射到宿主机的3306，也可用访问。
+```
+export MYSQLIP=`docker inspect malldb|jq ".[0].NetworkSettings.IPAddress"`
+docker run -it --link malldb:mysql --rm mysql:8.0 sh -c 'exec mysql -h"$MYSQLIP" -P3306 -uroot -prootpw'    
+```
+查看mount点
+```
+docker inspect malldb|jq ".[0].Mounts"
+```
+如果后面有mallapi的程序需要访问mysql，可用这样启动
+```
+docker run --name mallapi --link malldb:mysql -d z29759/mallapi:1   
+```
+
+
+
+
+
+
+
+
