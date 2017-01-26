@@ -98,7 +98,10 @@ docker inspect malldb|jq ".[0].Mounts"
 ```
 docker run --name mallapi --link malldb:mysql -d z29759/mallapi:1   
 ```
-
+直接进入容器内部
+```
+nsenter --target `docker inspect --format {{.State.Pid}}  3002e553d996` --mount --uts --ipc --net --pid
+```
 
 
 
